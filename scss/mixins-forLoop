@@ -1,0 +1,9 @@
+// parses animation delay based on number of elements
+
+@mixin animation-delay($number-of-elements, $increase-value, $start-value: .2) {
+    @for $i from 1 through $number-of-elements {
+        &:nth-child(#{$i}) {
+            animation-delay: #{$start-value + ($increase-value * ($i - 1))}s;
+        }
+    }
+}
