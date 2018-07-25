@@ -6,23 +6,27 @@
 
 begin tran
 
+begin tran
+
 merge 
-	config.Deliverables as prod
+	data.Reports as prod
 using 
-	(select * from migration.Deliverables except select * from config.Deliverables) as new
+	(select * from migration.Reports) as new
 on
-	(prod.DeliverableGUID = new.DeliverableGUID)
+	(prod.GUID = new.GUID)
 when matched
 then update set
 	prod.DeliverableLabel = new.DeliverableLabel,
-	prod.DeliverableDescription = new.DeliverableDescription,
-	prod.Level0Max = new.Level0Max,
-	prod.Level1Max = new.Level1Max,
-	prod.Level2Min = new.Level2Min,
-	prod.IndicatorLabel = new.IndicatorLabel
+	prod.IndicatorValue = new.IndicatorValue,
+	prod.ReportYear = new.ReportYear,
+	prod.ReportInterval = new.ReportInterval,
+	prod.TeamId = new.TeamId
+
 when not matched by target
 then
-	insert (DeliverableGUID, DeliverableLabel, DeliverableDescription, TeamId, Level0Max, Level1Max, Level2Min, IndicatorLabel)
-	values (DeliverableGUID, DeliverableLabel, DeliverableDescription, TeamId, Level0Max, Level1Max, Level2Min, IndicatorLabel);
+	insert (GUID, DeliverableLabel, IndicatorValue, ReportYear, TeamId, ReportInterval)
+	values (GUID, DeliverableLabel, IndicatorValue, ReportYear, TeamId, ReportInterval)
+WHEN NOT MATCHED BY SOURCE
+THEN DELETE;
 
 commit tran
