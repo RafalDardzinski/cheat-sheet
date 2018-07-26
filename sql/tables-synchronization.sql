@@ -6,27 +6,31 @@
 
 begin tran
 
-begin tran
+select * from dbo.source
+select * from dbo.target
+
+declare @department tinyint
+set @department = 1 -- department that is currently being updated
+
 
 merge 
-	data.Reports as prod
+	dbo.target target
 using 
-	(select * from migration.Reports) as new
+	(select * from dbo.source union select * from dbo.target where Department != @department) source
 on
-	(prod.GUID = new.GUID)
+	target.ID = source.ID
 when matched
 then update set
-	prod.DeliverableLabel = new.DeliverableLabel,
-	prod.IndicatorValue = new.IndicatorValue,
-	prod.ReportYear = new.ReportYear,
-	prod.ReportInterval = new.ReportInterval,
-	prod.TeamId = new.TeamId
-
-when not matched by target
+	target.Name = source.Name,
+	target.Job = source.Job,
+	target.Department = source.Department
+when not matched 
 then
-	insert (GUID, DeliverableLabel, IndicatorValue, ReportYear, TeamId, ReportInterval)
-	values (GUID, DeliverableLabel, IndicatorValue, ReportYear, TeamId, ReportInterval)
+	insert (ID, Name, Job, Department)
+	values (ID, Name, Job, Department)
 WHEN NOT MATCHED BY SOURCE
 THEN DELETE;
 
-commit tran
+select * from dbo.target
+
+rollback tran
