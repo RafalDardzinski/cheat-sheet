@@ -11,11 +11,12 @@ function distributeElements(container, elements) {
         angle = 180, step = (2*Math.PI) / elements.length;
     
     for (var i = 0; i < elements.length; i++) {
-        var x = Math.round(width / 2 + radius * Math.cos(angle) - elements[i].offsetWidth / 2);
-        var y = Math.round(height / 2 + radius * Math.sin(angle) - elements[i].offsetHeight / 2);
+        var element = elements[i];
+        var x = Math.round(width / 2 + radius * Math.cos(angle) - element.offsetWidth / 2);
+        var y = Math.round(height / 2 + radius * Math.sin(angle) - element.offsetHeight / 2);
         
-        elements[i].style.left = x + 'px';
-        elements[i].style.top = y + 'px';
+        element.style.left = x + 'px';
+        element.style.top = y + 'px';
         
         angle += step;
     }
