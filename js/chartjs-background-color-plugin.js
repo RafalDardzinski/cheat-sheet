@@ -4,6 +4,8 @@
 *  Colors entire canvas, not just chart area - useful when exporting chart to picture.
 */
 
+import Chart from 'chart.js'
+
 Chart.pluginService.register({
   beforeDraw: function (chart, easing) {
     if (chart.config.options.chartArea && chart.config.options.chartArea.backgroundColor) {
@@ -15,3 +17,5 @@ Chart.pluginService.register({
     }
   }
 });
+
+export default Chart;
